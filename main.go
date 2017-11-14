@@ -1,9 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"io"
+	"log"
+	"net/http"
 )
 
 func main() {
-	fmt.Println("hello")
+	http.HandleFunc("/job", ProcessJob)
+	log.Fatal(http.ListenAndServe(":12345", nil))
 }
