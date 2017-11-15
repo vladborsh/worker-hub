@@ -5,20 +5,35 @@ import (
 )
 
 type Worker struct {
-	id           string
-	workersQueue chan chan Job
-	jobChannel   chan Job
-	quitChannel  chan bool
+	Id           string
+	WorkersQueue chan chan Job
+	JobChannel   chan Job
+	QuitChannel  chan bool
+}
+
+func NewWorker(id int, workersQueue chan chan Job) Worker {
+	return Worker{
+		Id:           id,
+		WorkersQueue: workersQueue,
+		JobChannel:   make(chan Job),
+		QuitChannel:  make(chan bool)}
 }
 
 func (w *Worker) Run() {
-	workersQueue <- jobChannel
-	for {
-		select {
-		case work := <-jobChannel:
-			fmt.Println(job.Name)
-		case <-quitChannel:
-			fmt.Printf("Strop worker %d", w.id)
+	go func() {
+		WorkersQueue <- JobChannel
+		for {
+			select {
+			case job := <-JobChannel:
+				fmt.Println(job.Name)
+				WorkersQueue <- JobChannel
+			case <-quitChannel:
+				fmt.Printf("Strop worker %d", w.Id)
+			}
 		}
-	}
+	}()
+}
+
+func (w *Worker) Stop() {
+	w.QuitChannel < true
 }
