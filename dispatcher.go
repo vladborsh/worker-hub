@@ -16,8 +16,10 @@ func (d *Dispatcher) Init(numberWorkers int, prod Producer) {
 		for {
 			select {
 			case job := <-prod.Queue:
-				worker := <-WorkersQueue
-				worker.JobChannel <- job
+				go func() {
+					worker := <-WorkersQueue
+					worker.JobChannel <- job
+				}()
 			}
 		}
 	}()

@@ -7,6 +7,11 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/job", ProcessJob)
-	log.Fatal(http.ListenAndServe(":12345", nil))
+	prod := Producer{}
+	disp := Dispatcher{}
+	prod.Init()
+	disp.Init(3, prod)
+
+	http.HandleFunc("/job", prod.ProcessIncomingJob)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

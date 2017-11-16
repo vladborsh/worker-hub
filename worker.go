@@ -21,12 +21,11 @@ func NewWorker(id int, workersQueue chan chan Job) Worker {
 
 func (w *Worker) Run() {
 	go func() {
-		WorkersQueue <- JobChannel
 		for {
+			WorkersQueue <- JobChannel
 			select {
 			case job := <-JobChannel:
 				fmt.Println(job.Name)
-				WorkersQueue <- JobChannel
 			case <-quitChannel:
 				fmt.Printf("Strop worker %d", w.Id)
 			}
